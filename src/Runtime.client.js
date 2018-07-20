@@ -4,9 +4,8 @@ import { combineReducers } from 'redux-immutable';
 
 import { EntityStore } from './EntityStore';
 
-import { configureStore, getInitialState } from "./store";
-import { RouteStore } from "./routing";
-
+import { configureStore, getInitialState } from './store';
+import { RouteStore } from './routing';
 
 const entityStore = new EntityStore().setName('entities');
 const appStore = new EntityStore().setName('appInfo');
@@ -16,14 +15,29 @@ const reducer = combineReducers({
   [appStore.name]: appStore.reducer,
 });
 
-const sagas = [
-  ...entityStore.sagas,
-  ...appStore.sagas,
-];
+const sagas = [...entityStore.sagas, ...appStore.sagas];
 
-let instance: ?RuntimeClient = null;
+// todo add types
+export interface RuntimeClientInterface {
+  store: any;
+  Router: any;
+  routeStore: any;
+  entityStore: any;
+  appStore: any;
+}
 
+let instance: ?RuntimeClientInterface = null;
+
+/**
+ * Runtime client class.
+ */
 export class RuntimeClient {
+  /**
+   * Return instance of this class.
+   *
+   * @returns {Object} - Instance.
+   * @static
+   */
   static getInstance(): RuntimeClient {
     if (!instance) {
       instance = new RuntimeClient();

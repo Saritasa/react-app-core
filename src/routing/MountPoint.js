@@ -1,35 +1,82 @@
 // @flow
 import * as React from 'react';
-import {Route, withRouter} from "react-router-dom";
+import { Route, withRouter } from 'react-router-dom';
 
-export const MountPoint = withRouter(class MountPointPlain extends React.PureComponent<*> {
-  static getRouteProps(parentRoute: string, { childRoutes = [], path = '', ...route }: *) {
-    return {
-      ...route,
-      childRoutes,
-      path:`${parentRoute}/${path}`.replace(/\/+/g, '/'),
-    };
-  }
-
-  render() {
-    const { childRoutes, component: Component = React.Fragment, path, ...route } = this.props;
-    if (route.render) {
-      throw new Error('#render is not allowed property for route configuration.');
+/**
+ * MountPointPlain class wrapped withRouter.
+ */
+export const MountPoint = withRouter(
+  /**
+   * MountPointPlain class.
+   */
+  class MountPointPlain extends React.PureComponent<*> {
+    /**
+     * Returns object with path.
+     *
+     * @param {string} parentRoute - Parent route.
+     * @param {Array} childRoutes - Child routes.
+     * @param {string} path - Path.
+     * @param {*} route - Rest props.
+     * @returns {{childRoutes: Array, path: string}} Route props.
+     */
+    static getRouteProps(
+      parentRoute: string,
+      { childRoutes = [], path = '', ...route }: *,
+    ) {
+      return {
+        ...route,
+        childRoutes,
+        path: `${parentRoute}/${path}`.replace(/\/+/g, '/'),
+      };
     }
-    if (route.children) {
-      throw new Error('#children is not allowed property for route configuration.');
-    }
 
-    const render = ({ match }) => {
-      const content = childRoutes.map((route, index) => <MountPoint key={`${route.path}:${index}`} {...MountPointPlain.getRouteProps(match.url, route)} />);
+    /**
+     * Render method.
+     *
+     * @returns {?string} HTML markup or null.
+     */
+    render() {
+      const {
+        childRoutes,
+        component: Component = React.Fragment,
+        path,
+        ...route
+      } = this.props;
 
-      if (typeof Component === 'string' || Component === React.Fragment) {
-        return <Component>{content}</Component>
+      if (route.render) {
+        throw new Error(
+          '#render is not allowed property for route configuration.',
+        );
       }
 
-      return <Component match={match}>{content}</Component>
-    };
+      if (route.children) {
+        throw new Error(
+          '#children is not allowed property for route configuration.',
+        );
+      }
 
-    return <Route {...route} path={path} render={render} />;
-  }
-});
+      /**
+       * Function returns component for render.
+       *
+       * @param {Object} match - Router object with url.
+       * @returns {React.Node} React component.
+       */
+      const render = ({ match }) => {
+        const content = childRoutes.map(childRoute => (
+          <MountPoint
+            key={`${childRoute.path}:${Math.random()}`}
+            {...MountPointPlain.getRouteProps(match.url, childRoute)}
+          />
+        ));
+
+        if (typeof Component === 'string' || Component === React.Fragment) {
+          return <Component>{content}</Component>;
+        }
+
+        return <Component match={match}>{content}</Component>;
+      };
+
+      return <Route {...route} path={path} render={render} />;
+    }
+  },
+);

@@ -86,7 +86,6 @@ export class EntityStore {
    * Set injected state to true.
    */
   setInjected() {
-    // todo maybe it should returns ComposeStore?
     this.injected = true;
   }
 
@@ -128,13 +127,11 @@ export class EntityStore {
       throw new Error(`Specified name is not unique. Name is "${name}"`);
     }
 
-    // todo We can use this.setInjected(), isn't it?
     setInjected();
 
     this.reducers[name] = reducer;
     this.sagas.push(...sagas);
 
-    // todo We can use this.setBaseSelectorPath(), isn't it?
     setBaseSelectorPath([...this.mainPath, name]);
 
     this.realReducer = combineReducers(this.reducers);

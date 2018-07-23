@@ -1,7 +1,6 @@
 #parser: "babel-eslint"
 
 extends:
-  - "@saritasa/eslint-config-base"
   - "@saritasa/eslint-config-react"
 
 rules:

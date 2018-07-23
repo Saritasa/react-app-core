@@ -49,7 +49,6 @@ export class ComposeStore {
    * Set injected state to true.
    */
   setInjected() {
-    // todo maybe it should returns ComposeStore?
     this.injected = true;
   }
 
@@ -110,7 +109,6 @@ export class ComposeStore {
    * @param {Function} callback - Callback fot listener.
    */
   onBasePathUpdate(callback: Function) {
-    // todo maybe it should returns ComposeStore?
     this.basePathUpdateListeners.push(callback);
     callback([...this.mainPath, this.name]);
   }
@@ -121,7 +119,6 @@ export class ComposeStore {
    * @param {Function} callback - Callback which need to remove.
    */
   removeBasePathUpdateListener(callback: *) {
-    // todo maybe it should returns ComposeStore?
     this.basePathUpdateListeners = this.basePathUpdateListeners.filter(
       cb => cb !== callback,
     );

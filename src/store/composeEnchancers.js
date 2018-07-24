@@ -1,10 +1,18 @@
 // @flow
 import { compose } from 'redux';
 
-
 /* eslint-disable no-underscore-dangle */
+/**
+ * ??? todo.
+ *
+ * @returns {$Compose} Enhanced ???.
+ */
 function getComposeEnhancers() {
-  if (process.env.ON_SERVER !== false || process.env.NODE_ENV === 'production' || !window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
+  if (
+    process.env.ON_SERVER !== false ||
+    process.env.NODE_ENV === 'production' ||
+    !window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+  ) {
     return compose;
   }
 
@@ -14,8 +22,9 @@ function getComposeEnhancers() {
       const type = String(action.type);
 
       return { ...action, type };
-      },
+    },
   });
 }
+/* eslint-enable no-underscore-dangle */
 
 export const composeEnhancers = getComposeEnhancers();

@@ -4,9 +4,15 @@ import { Provider } from 'react-redux';
 import { Route } from 'react-router-dom';
 
 import { Routes } from './routing';
-import type { RuntimeClient } from './Runtime.client';
+import type { RuntimeClientInterface } from './Runtime.client';
 
-export function createApplication(Runtime: Class<RuntimeClient>) {
+/**
+ * Create React application.
+ *
+ * @param {class} Runtime - Runtime class.
+ * @returns {React.Node} React application.
+ */
+export function createApplication(Runtime: Class<RuntimeClientInterface>) {
   const runtime = Runtime.getInstance();
 
   const { Router, store, routeStore } = runtime;
@@ -14,10 +20,12 @@ export function createApplication(Runtime: Class<RuntimeClient>) {
   return (
     <Provider store={store}>
       <Router>
-        <Route path="/" render={({ location }) => {
-          return <Routes routeStore={routeStore} location={location}/>
-        }}>
-        </Route>
+        <Route
+          path="/"
+          render={({ location }) => (
+            <Routes location={location} routeStore={routeStore} />
+          )}
+        />
       </Router>
     </Provider>
   );

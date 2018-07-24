@@ -1,6 +1,12 @@
 // @flow
 import { Iterable } from 'immutable';
 
+/**
+ * Data transformer.
+ *
+ * @param {Object} state - State.
+ * @returns {Object} Transformed state.
+ */
 export function lazyTransformToJS(state: *) {
   let result = state;
 
@@ -9,6 +15,11 @@ export function lazyTransformToJS(state: *) {
 
     state.forEach((part, key) =>
       Object.defineProperty(result, key, {
+        /**
+         * Transform to JS if need.
+         *
+         * @returns {Object} Plain JS object.
+         */
         get() {
           if (!Iterable.isIterable(part)) return part;
 

@@ -16,7 +16,7 @@ export function createApplication(Runtime: Class<RuntimeClient>) {
       <Router>
         <Route
           path="/"
-          render={({ location }) => <Routes routeStore={routeStore} location={location}/>}>
+          render={({ location }) => <Routes routeStore={routeStore} location={location}/>}
         />
       </Router>
     </Provider>

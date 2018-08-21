@@ -1,10 +1,13 @@
 // @flow
 import { compose } from 'redux';
 
-
 /* eslint-disable no-underscore-dangle */
 function getComposeEnhancers() {
-  if (process.env.ON_SERVER !== false || process.env.NODE_ENV === 'production' || !window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) {
+  if (
+    process.env.ON_SERVER !== false ||
+    process.env.NODE_ENV === 'production' ||
+    !window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+  ) {
     return compose;
   }
 
@@ -14,7 +17,7 @@ function getComposeEnhancers() {
       const type = String(action.type);
 
       return { ...action, type };
-      },
+    },
   });
 }
 

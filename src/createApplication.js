@@ -14,10 +14,10 @@ export function createApplication(Runtime: Class<RuntimeClient>) {
   return (
     <Provider store={store}>
       <Router>
-        <Route path="/" render={({ location }) => {
-          return <Routes routeStore={routeStore} location={location}/>
-        }}>
-        </Route>
+        <Route
+          path="/"
+          render={({ location }) => <Routes routeStore={routeStore} location={location}/>}>
+        />
       </Router>
     </Provider>
   );

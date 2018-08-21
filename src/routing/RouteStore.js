@@ -33,7 +33,7 @@ export class RouteStore {
 
   injectRouteStore(store: RouteStore): this {
     this.inject(store.setParentPath(this.parentPath).getRoutes());
-    this.onParentPathChange((parentPath) => {
+    this.onParentPathChange(parentPath => {
       store.setParentPath(parentPath);
     });
 
@@ -55,10 +55,12 @@ export class RouteStore {
   }
 
   getRoutes() {
-    return [{
-      path: this.name,
-      childRoutes: [...this.routes],
-    }];
+    return [
+      {
+        path: this.name,
+        childRoutes: [...this.routes],
+      },
+    ];
   }
 
   callSubscribers() {

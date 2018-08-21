@@ -4,9 +4,10 @@
   "description": "Core part of react application to prevent copy-pasting",
   "main": "dist/index.js",
   "scripts": {
-    "1prebuild": "rimraf ./dist",
+    "prebuild": "rimraf ./dist",
     "build": "babel -d ./dist/ ./src/ ",
     "postbuild": "node add-flow-types",
+    "prepublish": "npm run lint && npm run build",
     "lint": "eslint -c ./.eslintrc.yaml \"src/**/*.js\""
   },
   "author": "Konstantine Petryaev <numminorihsf@gmail.com>",

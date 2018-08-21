@@ -1,12 +1,12 @@
 // @flow
 import { createStore, applyMiddleware } from 'redux';
 import { createLogger } from 'redux-logger';
-import createSagaMiddleware from 'redux-saga'
+import createSagaMiddleware from 'redux-saga';
 import { combineReducers } from 'redux-immutable';
 
 import { lazyTransformToJS } from './lazyTransformToJS';
-import { composeEnhancers } from "./composeEnchancers";
-import { devTools } from "./devTools";
+import { composeEnhancers } from './composeEnchancers';
+import { devTools } from './devTools';
 
 const sagaMiddleware = createSagaMiddleware();
 

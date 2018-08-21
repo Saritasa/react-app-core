@@ -2,57 +2,57 @@ import { fromJS } from 'immutable';
 
 import { lazyTransformToJS as transform } from './lazyTransformToJS';
 
-describe('Store::lazyTransformToJS', function() {
+describe('Store::lazyTransformToJS', () => {
   const { env } = process;
   let arg;
 
-  beforeEach(function() {
+  beforeEach(() => {
     process.env = Object.assign({}, env);
     process.env.NODE_ENV = 'not-prod';
     arg = fromJS({});
   });
 
-  afterEach(function() {
+  afterEach(() => {
     process.env = env;
   });
 
-  describe('in production mode', function() {
-    beforeEach(function() {
+  describe('in production mode', () => {
+    beforeEach(() => {
       process.env.NODE_ENV = 'production';
     });
 
-    it("returns state's object if it's a regular object", function() {
+    it("returns state's object if it's a regular object", () => {
       arg = {};
       expect(transform(arg)).to.be.equal(arg);
     });
 
-    it("returns state's object if it's an array", function() {
+    it("returns state's object if it's an array", () => {
       arg = [];
       expect(transform(arg)).to.be.equal(arg);
     });
 
-    it("returns state's immutable object without transforms", function() {
+    it("returns state's immutable object without transforms", () => {
       expect(transform(arg)).to.be.equal(arg);
     });
 
-    it("returns state's immutable list without transforms", function() {
+    it("returns state's immutable list without transforms", () => {
       arg = fromJS([]);
       expect(transform(arg)).to.be.equal(arg);
     });
   });
 
-  describe('in dev mode', function() {
-    it("returns state's object if it's a regular object", function() {
+  describe('in dev mode', () => {
+    it("returns state's object if it's a regular object", () => {
       arg = {};
       expect(transform(arg)).to.be.equal(arg);
     });
 
-    it("returns state's object if it's an array", function() {
+    it("returns state's object if it's an array", () => {
       arg = [];
       expect(transform(arg)).to.be.equal(arg);
     });
 
-    it("returns state's object with the same fields as immutable state", function() {
+    it("returns state's object with the same fields as immutable state", () => {
       arg = arg.merge({
         a: 1,
         b: 2,
@@ -62,7 +62,7 @@ describe('Store::lazyTransformToJS', function() {
       expect(Object.keys(transform(arg))).to.be.deep.equal(['a', 'b', 'c', 'd']);
     });
 
-    it("returns state's object with getters", function() {
+    it("returns state's object with getters", () => {
       arg = arg.merge({
         a: 1,
       });
@@ -72,7 +72,7 @@ describe('Store::lazyTransformToJS', function() {
       expect(descriptor.get).to.be.instanceOf(Function);
     });
 
-    it("returns state's field value if it is not immutable", function() {
+    it("returns state's field value if it is not immutable", () => {
       const a = { b: 2 };
 
       arg = arg.set('a', a);
@@ -80,7 +80,7 @@ describe('Store::lazyTransformToJS', function() {
       expect(transform(arg).a).to.be.equal(a);
     });
 
-    it("returns state's field transformetTo js value if it is immutable", function() {
+    it("returns state's field transformetTo js value if it is immutable", () => {
       const a = { b: 2 };
 
       arg = arg.merge({ a });

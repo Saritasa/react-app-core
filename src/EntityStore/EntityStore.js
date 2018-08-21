@@ -1,15 +1,12 @@
 // @flow
 import { combineReducers } from 'redux-immutable';
 
-export type EntityStoreOptions<
-  Reducer: <T>(T, { type: string }) => T,
-  Sagas
-  > = {
+export type EntityStoreOptions<Reducer: <T>(T, { type: string }) => T, Sagas> = {
   name?: string,
   setBaseSelectorPath: (Array<String>) => void,
   reducer: Reducer,
   sagas: Sagas,
-}
+};
 
 let id = 0;
 
@@ -25,7 +22,7 @@ export class EntityStore {
   name = this.generateName();
   reducer = <State, Action>(state: State, action: Action): State => {
     if (!this.realReducer) {
-      throw new Error('Initialization failed. Please send bug report to package\'s authors');
+      throw new Error("Initialization failed. Please send bug report to package's authors");
     }
 
     return this.realReducer(state, action);

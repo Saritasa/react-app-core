@@ -1,9 +1,9 @@
 // @flow
 import * as React from 'react';
-import { Route } from 'react-router-dom'
+import { Route } from 'react-router-dom';
 
-import { RouteStore } from './RouteStore'
-import {MountPoint} from "./MountPoint";
+import { RouteStore } from './RouteStore';
+import { MountPoint } from './MountPoint';
 
 type RouterComponentProps = {| routeStore: RouteStore, location?: any |};
 type RouterComponentState = { routeStore: ?RouteStore, routes: Array<*> };
@@ -15,7 +15,7 @@ export class Routes extends React.PureComponent<RouterComponentProps, RouterComp
     }
 
     if (props.routeStore !== state.routeStore) {
-      throw new Error('Can\'t update routeStore in hot mode.');
+      throw new Error("Can't update routeStore in hot mode.");
     }
 
     return state;
@@ -25,32 +25,25 @@ export class Routes extends React.PureComponent<RouterComponentProps, RouterComp
     return {
       ...route,
       childRoutes,
-      path:`${parentRoute}/${path}`.replace(/\/+/g, '/'),
+      path: `${parentRoute}/${path}`.replace(/\/+/g, '/'),
     };
   }
 
   static renderRoute({ path, ...route }: *, index: number) {
-    const render = ({match}) => (
-      <MountPoint match={match} {...route} path={path} />
-    );
+    const render = ({ match }) => <MountPoint match={match} {...route} path={path} />;
 
-    return (
-      <Route
-        key={`${path}:${index}`}
-        {...route}
-        path={path}
-        render={render}
-      />
-    );
+    return <Route key={`${path}:${index}`} {...route} path={path} render={render} />;
   }
 
   state = { routes: [], routeStore: null };
 
   componentDidMount() {
     if (!this.state.routeStore) {
-      throw new Error('componentDidMount called without #routeStore. This should never happened. Please change if you passed #routeStore property to RouteComponent.');
+      throw new Error(
+        'componentDidMount called without #routeStore. This should never happened. Please change if you passed #routeStore property to RouteComponent.',
+      );
     }
-    this.state.routeStore.subscribe(this.handleRouteUpdates)
+    this.state.routeStore.subscribe(this.handleRouteUpdates);
   }
 
   handleRouteUpdates = (routes: Array<*>) => {
@@ -60,7 +53,9 @@ export class Routes extends React.PureComponent<RouterComponentProps, RouterComp
   render() {
     return (
       <div>
-        {this.state.routes.map((route, index) => Routes.renderRoute(Routes.getRouteProps('/', route), index))}
+        {this.state.routes.map((route, index) =>
+          Routes.renderRoute(Routes.getRouteProps('/', route), index),
+        )}
       </div>
     );
   }

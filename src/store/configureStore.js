@@ -2,7 +2,6 @@
 import { createStore, applyMiddleware } from 'redux';
 import { createLogger } from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
-import { combineReducers } from 'redux-immutable';
 
 import { lazyTransformToJS } from './lazyTransformToJS';
 import { composeEnhancers } from './composeEnchancers';
@@ -16,17 +15,33 @@ const logger = createLogger({
   logger: console,
   predicate: () => process.env.NODE_ENV !== 'production',
   stateTransformer: lazyTransformToJS,
-  actionTransformer: action => Object.assign({}, action, { type: String(action.type) }),
+  actionTransformer: action =>
+    Object.assign({}, action, { type: String(action.type) }),
 });
 
-const createStoreWithMiddleware = function configureStore(reducer, initialState) {
+/**
+ * Create and returns store with middleware.
+ *
+ * @param {Function} reducer - Reducer.
+ * @param {Object} initialState - State.
+ * @returns {Store<S, A, D>} New store.
+ */
+function createStoreWithMiddleware(reducer, initialState) {
   return createStore(
     reducer,
     initialState,
     composeEnhancers(applyMiddleware(sagaMiddleware, logger), devTools),
   );
-};
+}
 
+/**
+ * Add sagas to store middleware.
+ *
+ * @param {Object} initialState - State.
+ * @param {Function} reducer - Reducer.
+ * @param {Array} sagas - Sagas.
+ * @returns {Store<S, A, D>} Configured store.
+ */
 export function configureStore(initialState: *, { reducer, sagas }: *) {
   const store = createStoreWithMiddleware(reducer, initialState);
 

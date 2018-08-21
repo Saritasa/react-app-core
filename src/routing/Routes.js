@@ -5,11 +5,26 @@ import { Route } from 'react-router-dom';
 import { RouteStore } from './RouteStore';
 import { MountPoint } from './MountPoint';
 
-type RouterComponentProps = {| routeStore: RouteStore, location?: any |};
-type RouterComponentState = { routeStore: ?RouteStore, routes: Array<*> };
+type Props = {| routeStore: RouteStore, location?: any |};
+type State = { routeStore: ?RouteStore, routes: Array<*> };
 
-export class Routes extends React.PureComponent<RouterComponentProps, RouterComponentState> {
-  static getDerivedStateFromProps(props: RouterComponentProps, state: RouterComponentState) {
+/**
+ * Routes class.
+ *
+ * @param {Array} routes - Array of routes.
+ */
+export class Routes extends React.PureComponent<Props, State> {
+  state = { routes: [], routeStore: null };
+
+  /**
+   * React event.
+   * Invoked right before calling the render method.
+   *
+   * @param {Object} props - React props.
+   * @param {Object} state - React state.
+   * @returns {Object} State.
+   */
+  static getDerivedStateFromProps(props: Props, state: State) {
     if (!state.routeStore) {
       return { routeStore: props.routeStore };
     }
@@ -21,22 +36,10 @@ export class Routes extends React.PureComponent<RouterComponentProps, RouterComp
     return state;
   }
 
-  static getRouteProps(parentRoute: string, { childRoutes = [], path = '', ...route }: *) {
-    return {
-      ...route,
-      childRoutes,
-      path: `${parentRoute}/${path}`.replace(/\/+/g, '/'),
-    };
-  }
-
-  static renderRoute({ path, ...route }: *, index: number) {
-    const render = ({ match }) => <MountPoint match={match} {...route} path={path} />;
-
-    return <Route key={`${path}:${index}`} {...route} path={path} render={render} />;
-  }
-
-  state = { routes: [], routeStore: null };
-
+  /**
+   * React event.
+   * Invoked immediately after a component is mounted.
+   */
   componentDidMount() {
     if (!this.state.routeStore) {
       throw new Error(
@@ -50,6 +53,55 @@ export class Routes extends React.PureComponent<RouterComponentProps, RouterComp
     this.setState(() => ({ routes }));
   };
 
+  /**
+   * Returns object with path.
+   *
+   * @param {string} parentRoute - Parent route.
+   * @param {Array} childRoutes - Child routes.
+   * @param {string} path - Path.
+   * @param {*} route - Rest props.
+   * @returns {{childRoutes: Array, path: string}} Route props.
+   */
+  static getRouteProps(
+    parentRoute: string,
+    { childRoutes = [], path = '', ...route }: *,
+  ) {
+    return {
+      ...route,
+      childRoutes,
+      path: `${parentRoute}/${path}`.replace(/\/+/g, '/'),
+    };
+  }
+
+  /**
+   * Returns Router component.
+   *
+   * @param {string} path - Path.
+   * @param {number} index - Index.
+   * @param {*} route - Rest routes.
+   * @returns {React.Node} Router component.
+   */
+  static renderRoute({ path, ...route }: *, index: number) {
+    /**
+     * Returns Route component.
+     *
+     * @param {Object} match - Router object with url.
+     * @returns {React.Node} React component.
+     */
+    const render = ({ match }) => (
+      <MountPoint match={match} {...route} path={path} />
+    );
+
+    return (
+      <Route key={`${path}:${index}`} {...route} path={path} render={render} />
+    );
+  }
+
+  /**
+   * Render method.
+   *
+   * @returns {?string} HTML markup or null.
+   */
   render() {
     return (
       <div>

@@ -17,9 +17,27 @@ const reducer = combineReducers({
 
 const sagas = [...entityStore.sagas, ...appStore.sagas];
 
-let instance: ?RuntimeClient = null;
+// todo add types
+export interface RuntimeClientInterface {
+  store: any;
+  Router: any;
+  routeStore: any;
+  entityStore: any;
+  appStore: any;
+}
 
+let instance: ?RuntimeClientInterface = null;
+
+/**
+ * Runtime client class.
+ */
 export class RuntimeClient {
+  /**
+   * Return instance of this class.
+   *
+   * @returns {Object} - Instance.
+   * @static
+   */
   static getInstance(): RuntimeClient {
     if (!instance) {
       instance = new RuntimeClient();

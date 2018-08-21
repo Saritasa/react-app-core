@@ -1,6 +1,11 @@
 // @flow
 const defaultDevTool = <T>(arg: T): T => arg;
 
+/**
+ * ??? todo.
+ *
+ * @returns {function(T): T} ??? todo.
+ */
 function getDevTools() {
   if (
     process.env.ON_SERVER === false ||

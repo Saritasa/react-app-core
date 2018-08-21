@@ -1,7 +1,7 @@
-parser: "babel-eslint"
+#parser: "babel-eslint"
 
 extends:
-  - "@saritasa/eslint-config-base"
+  - "@saritasa/eslint-config-react"
 
 rules:
   import/no-unresolved: off

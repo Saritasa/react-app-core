@@ -2,6 +2,11 @@
 import { compose } from 'redux';
 
 /* eslint-disable no-underscore-dangle */
+/**
+ * ??? todo.
+ *
+ * @returns {$Compose} Enhanced ???.
+ */
 function getComposeEnhancers() {
   if (
     process.env.ON_SERVER !== false ||
@@ -20,5 +25,6 @@ function getComposeEnhancers() {
     },
   });
 }
+/* eslint-enable no-underscore-dangle */
 
 export const composeEnhancers = getComposeEnhancers();

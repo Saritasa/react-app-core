@@ -8,9 +8,16 @@ import { getFullRoute } from './getFullRoute';
 type LinkProps = React.ElementProps<typeof ReactRouterLink>;
 type LinkState = { injectedRoute: ?InjectedPath, to: string };
 
+/**
+ * Link class.
+ */
 export class Link extends React.PureComponent<LinkProps, LinkState> {
   state = { to: '', injectedRoute: null };
 
+  /**
+   * React event.
+   * Invoked immediately after a component is mounted.
+   */
   componentDidMount() {
     const { to } = this.props;
 
@@ -20,6 +27,10 @@ export class Link extends React.PureComponent<LinkProps, LinkState> {
     }
   }
 
+  /**
+   * React event.
+   * Invoked immediately before a component is unmounted and destroyed.
+   */
   componentWillUnmount() {
     const { to } = this.props;
 
@@ -28,6 +39,9 @@ export class Link extends React.PureComponent<LinkProps, LinkState> {
     }
   }
 
+  /**
+   * Path update handler.
+   */
   handlePathUpdate = () => {
     const { to } = this.props;
 
@@ -40,6 +54,11 @@ export class Link extends React.PureComponent<LinkProps, LinkState> {
     }));
   };
 
+  /**
+   * Render method.
+   *
+   * @returns {?string} HTML markup or null.
+   */
   render() {
     const { to: propTo, ...rest } = this.props;
     const { to: stateTo } = this.state;

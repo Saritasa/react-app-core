@@ -5,7 +5,10 @@ import { Link } from './Link';
 import { InjectedPath } from './InjectedPath';
 
 type LinkPropsShouldBeMissed = { to: any };
-type LinkProps = $Diff<React.ElementProps<typeof Link>, LinkPropsShouldBeMissed>;
+type LinkProps = $Diff<
+  React.ElementProps<typeof Link>,
+  LinkPropsShouldBeMissed,
+>;
 
 /**
  * Returns function that create static link with your path.

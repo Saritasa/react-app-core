@@ -3,7 +3,7 @@ import { compose } from 'redux';
 
 /* eslint-disable no-underscore-dangle */
 /**
- * ??? todo.
+ * ??? Todo.
  *
  * @returns {$Compose} Enhanced ???.
  */

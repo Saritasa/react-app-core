@@ -69,13 +69,14 @@ export const MountPoint = withRouter(
           />
         ));
 
-      if (typeof Component === 'string' || Component === React.Fragment) {
-        return <Component>{content}</Component>
-      }
+        if (typeof Component === 'string' || Component === React.Fragment) {
+          return <Component>{content}</Component>;
+        }
 
-      return <Component match={match}>{content}</Component>
-    };
+        return <Component match={match}>{content}</Component>;
+      };
 
-    return <Route {...route} path={path} render={render} />;
-  }
-});
+      return <Route {...route} path={path} render={render} />;
+    }
+  },
+);

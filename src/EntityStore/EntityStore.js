@@ -1,7 +1,9 @@
 // @flow
 import { combineReducers } from 'redux-immutable';
 
-export type EntityStoreOptions<Reducer: <T>(T, { type: string }) => T, Sagas,
+export type EntityStoreOptions<
+  Reducer: <T>(T, { type: string }) => T,
+  Sagas,
 > = {
   name?: string,
   setBaseSelectorPath: (Array<String>) => void,
@@ -25,8 +27,14 @@ const noop = () => null;
  */
 export class EntityStore {
   injected = false;
-  // todo For what we need realReducer?
-  realReducer = <State>(state: State): State => state || null;
+  /**
+   * Is used to allow lazy-loading reducers and prevent creating function every time.
+   *
+   * @param state
+   * @param action
+   * @returns {State|null}
+   */
+  realReducer = <State>(state: State, action: *): State => state || null;
   reducers = {};
   mainPath = [];
   basePathSettersMap: { [string]: (string | Array<string>) => void } = {};

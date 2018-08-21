@@ -2,9 +2,9 @@
 const defaultDevTool = <T>(arg: T): T => arg;
 
 /**
- * ??? todo.
+ * ??? Todo.
  *
- * @returns {function(T): T} ??? todo.
+ * @returns {function(T): T} ??? Todo.
  */
 function getDevTools() {
   if (

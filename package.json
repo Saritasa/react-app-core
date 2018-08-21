@@ -1,6 +1,6 @@
 {
   "name": "react-app-core",
-  "version": "1.0.0-rc.2",
+  "version": "1.0.0",
   "description": "Core part of react application to prevent copy-pasting",
   "main": "dist/index.js",
   "scripts": {

@@ -4,7 +4,7 @@ import { RouteStore } from './RouteStore';
 export class InjectedPath {
   currentPath: string;
   parentPath: string;
-  listeners = [];
+  listeners: Array<() => void> = [];
 
   static of(currentPath: string) {
     const injectedRoute = new InjectedPath();

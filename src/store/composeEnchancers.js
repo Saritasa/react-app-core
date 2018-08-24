@@ -9,7 +9,7 @@ import { compose } from 'redux';
  */
 function getComposeEnhancers() {
   if (
-    process.env.ON_SERVER !== false ||
+    process.env.REACT_APP_TARGET !== 'client' ||
     process.env.NODE_ENV === 'production' ||
     !window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
   ) {

@@ -1,4 +1,5 @@
 // @flow
+import * as Immutable from 'immutable';
 import { combineReducers } from 'redux-immutable';
 
 export type EntityStoreOptions<
@@ -18,14 +19,24 @@ let id = 0;
  *
  * @returns {null} Just returns null.
  */
-const noop = () => null;
+const noop = (...rest) => null;
 // todo noop uses in one place only.
 // todo maybe we should replace this?
 
+const NO_STATE = Immutable.fromJS({});
 /**
  * EntityStore Class.
  */
 export class EntityStore {
+  /**
+   * Generate name from id.
+   *
+   * @returns {string} Name.
+   */
+  static generateName() {
+    return `entity-${id++}`;
+  }
+
   injected = false;
   /**
    * Is used to allow lazy-loading reducers and prevent creating function every time.
@@ -34,12 +45,12 @@ export class EntityStore {
    * @param action
    * @returns {State|null}
    */
-  realReducer = <State>(state: State, action: *): State => state || null;
+  realReducer = <State>(state: State = NO_STATE, action: *): State => state;
   reducers = {};
   mainPath = [];
   basePathSettersMap: { [string]: (string | Array<string>) => void } = {};
 
-  name = this.generateName();
+  name = EntityStore.generateName();
 
   /**
    * Reducer.
@@ -55,6 +66,9 @@ export class EntityStore {
       );
     }
 
+    if (state === NO_STATE) {
+      return this.realReducer(void 0, action);
+    }
     return this.realReducer(state, action);
   };
   sagas = [];
@@ -63,7 +77,8 @@ export class EntityStore {
    * Set base path.
    *
    * @param {string|Array} path - Path or array of paths.
-   * @returns {ComposeStore} This instance for chains.
+   *
+   * @returns {this} This instance for chains.
    */
   setBaseSelectorPath = (path: string | Array<string>) => {
     if (typeof path === 'string') {
@@ -99,7 +114,8 @@ export class EntityStore {
    * Set name.
    *
    * @param {string} name - New name.
-   * @returns {ComposeStore} This instance for chains.
+   *
+   * @returns {EntityStore} This instance for chains.
    */
   setName(name: string) {
     if (this.injected) {
@@ -120,14 +136,16 @@ export class EntityStore {
    * @param {Array} sagas - Array of sagas.
    * @param {Function} setBaseSelectorPath - Function setBaseSelectorPath.
    * @param {Function} setInjected - Function setInjected.
+   * @param {Function} subscribeToSagaAppending - Function to allow parent know if new sagas created.
    * @returns {EntityStore} This instance for chains.
    */
   inject({
-    name = this.generateName(),
+    name = EntityStore.generateName(),
     reducer,
     sagas,
     setBaseSelectorPath,
     setInjected = noop,
+    subscribeToSagaAppending = noop,
   }: *) {
     if (Object.prototype.hasOwnProperty.call(this.reducers, name)) {
       throw new Error(`Specified name is not unique. Name is "${name}"`);
@@ -136,22 +154,27 @@ export class EntityStore {
     setInjected();
 
     this.reducers[name] = reducer;
-    this.sagas.push(...sagas);
+
+    sagas.forEach(saga => {
+      this.sagas.push(saga);
+      this.subscribersToSagaAppending.forEach(callback => callback(saga));
+    });
 
     setBaseSelectorPath([...this.mainPath, name]);
+
+    subscribeToSagaAppending((saga) => {
+      this.sagas.push(saga);
+      this.subscribersToSagaAppending.forEach(callback => callback(saga));
+    });
 
     this.realReducer = combineReducers(this.reducers);
 
     return this;
   }
 
-  /**
-   * Generate name from id.
-   *
-   * @returns {string} Name.
-   */
-  generateName() {
-    // todo maybe it should be static
-    return `entity-${id++}`;
+  subscribersToSagaAppending: Array<(*) => void> = [];
+
+  subscribeToSagaAppending = (callback: *) => {
+    this.subscribersToSagaAppending.push(callback);
   }
 }

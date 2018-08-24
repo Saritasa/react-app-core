@@ -8,8 +8,8 @@ const defaultDevTool = <T>(arg: T): T => arg;
  */
 function getDevTools() {
   if (
-    process.env.ON_SERVER === false ||
-    process.env.NODE_ENV !== 'production' ||
+    process.env.REACT_APP_TARGET !== 'client' ||
+    process.env.NODE_ENV === 'production' ||
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||
     !window.devToolsExtension
   ) {

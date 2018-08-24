@@ -1,3 +1,3 @@
 // @flow
-export { configureStore } from './configureStore';
+export { configureStore, appendSaga } from './configureStore';
 export { getInitialState } from './getInitialState';

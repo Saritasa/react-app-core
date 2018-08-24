@@ -4,7 +4,7 @@ import { combineReducers } from 'redux-immutable';
 
 import { EntityStore } from './EntityStore';
 
-import { configureStore, getInitialState } from './store';
+import { configureStore, getInitialState, appendSaga } from './store';
 import { RouteStore } from './routing';
 
 const entityStore = new EntityStore().setName('entities');
@@ -15,7 +15,10 @@ const reducer = combineReducers({
   [appStore.name]: appStore.reducer,
 });
 
-const sagas = [...entityStore.sagas, ...appStore.sagas];
+const initialSagas = [...entityStore.sagas, ...appStore.sagas];
+
+entityStore.subscribeToSagaAppending(appendSaga);
+appStore.subscribeToSagaAppending(appendSaga);
 
 // eslint-disable-next-line no-use-before-define
 let instance: ?RuntimeClient = null;
@@ -37,7 +40,7 @@ export class RuntimeClient {
     return instance;
   }
 
-  store = configureStore(getInitialState(), { reducer, sagas });
+  store = configureStore(getInitialState(), { reducer, sagas: initialSagas });
   Router = Router;
   routeStore = new RouteStore();
   entityStore = entityStore;

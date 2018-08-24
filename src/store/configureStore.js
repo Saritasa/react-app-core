@@ -49,3 +49,12 @@ export function configureStore(initialState: *, { reducer, sagas }: *) {
 
   return store;
 }
+
+/**
+ * Add extra saga to application.
+ *
+ * @param {Array<Saga>} saga - Saga to run.
+ */
+export function appendSaga(saga: *) {
+  sagaMiddleware.run(saga);
+}

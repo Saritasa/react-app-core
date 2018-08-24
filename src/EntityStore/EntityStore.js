@@ -96,7 +96,7 @@ export class EntityStore {
         if (typeof setBaseSelectorPath !== 'function') {
           throw new Error('setBaseSelectorPath should be a function');
         }
-        setBaseSelectorPath([...path, name]);
+        setBaseSelectorPath([...this.mainPath, name]);
       },
     );
 

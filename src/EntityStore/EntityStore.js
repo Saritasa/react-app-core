@@ -24,6 +24,7 @@ const noop = (...rest) => null;
 // todo maybe we should replace this?
 
 const NO_STATE = Immutable.fromJS({});
+
 /**
  * EntityStore Class.
  */
@@ -69,6 +70,7 @@ export class EntityStore {
     if (state === NO_STATE) {
       return this.realReducer(void 0, action);
     }
+
     return this.realReducer(state, action);
   };
   sagas = [];
@@ -162,7 +164,7 @@ export class EntityStore {
 
     setBaseSelectorPath([...this.mainPath, name]);
 
-    subscribeToSagaAppending((saga) => {
+    subscribeToSagaAppending(saga => {
       this.sagas.push(saga);
       this.subscribersToSagaAppending.forEach(callback => callback(saga));
     });
@@ -176,5 +178,5 @@ export class EntityStore {
 
   subscribeToSagaAppending = (callback: *) => {
     this.subscribersToSagaAppending.push(callback);
-  }
+  };
 }

@@ -7,8 +7,12 @@ import { EntityStore } from './EntityStore';
 import { configureStore, getInitialState, appendSaga } from './store';
 import { RouteStore } from './routing';
 
-const entityStore = new EntityStore().setBaseSelectorPath(['entities']).setName('entities');
-const appStore = new EntityStore().setBaseSelectorPath(['entities']).setName('appInfo');
+const entityStore = new EntityStore()
+  .setBaseSelectorPath(['entities'])
+  .setName('entities');
+const appStore = new EntityStore()
+  .setBaseSelectorPath(['entities'])
+  .setName('appInfo');
 
 const reducer = combineReducers({
   [entityStore.name]: entityStore.reducer,

@@ -139,6 +139,7 @@ export class EntityStore {
    * @param {Array} sagas - Array of sagas.
    * @param {Function} setBaseSelectorPath - Function setBaseSelectorPath.
    * @param {Function} setInjected - Function setInjected.
+   * @param {Function} onDeepInject - Function onDeepInject.
    * @param {Function} subscribeToSagaAppending - Function to allow parent know if new sagas created.
    * @returns {EntityStore} This instance for chains.
    */
@@ -148,6 +149,7 @@ export class EntityStore {
     sagas,
     setBaseSelectorPath,
     setInjected = noop,
+    onDeepInject = noop,
     subscribeToSagaAppending = noop,
   }: *) {
     if (Object.prototype.hasOwnProperty.call(this.reducers, name)) {
@@ -174,12 +176,16 @@ export class EntityStore {
 
     this.deepInjectListeners.forEach(listener => listener(name));
 
+    onDeepInject((name) => {
+      this.deepInjectListeners.forEach(listener => listener(name));
+    });
+
     return this;
   }
 
-  onDeepInject(callback: string => void) {
+  onDeepInject = (callback: string => void) => {
     this.deepInjectListeners.push(callback);
-  }
+  };
 
   subscribersToSagaAppending: Array<(*) => void> = [];
 

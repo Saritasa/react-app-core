@@ -39,9 +39,25 @@ export class RuntimeClient {
   static getInstance(): RuntimeClient {
     if (!instance) {
       instance = new RuntimeClient();
+      instance.subscribeToStoreUpdates();
     }
 
     return instance;
+  }
+
+  subscribeToStoreUpdates() {
+    this.entityStore.onDeepInject(name =>
+      this.store.dispatch({
+        type: '@@react-app-core/DEEP_INJECT_ENTITY',
+        payload: { name },
+      }),
+    );
+    this.appStore.onDeepInject(name =>
+      this.store.dispatch({
+        type: '@@react-app-core/DEEP_INJECT_ENTITY',
+        payload: { name },
+      }),
+    );
   }
 
   store = configureStore(getInitialState(), { reducer, sagas: initialSagas });

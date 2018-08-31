@@ -50,6 +50,7 @@ export class EntityStore {
   reducers = {};
   mainPath = [];
   basePathSettersMap: { [string]: (string | Array<string>) => void } = {};
+  deepInjectListeners = [];
 
   name = EntityStore.generateName();
 
@@ -171,7 +172,13 @@ export class EntityStore {
 
     this.realReducer = combineReducers(this.reducers);
 
+    this.deepInjectListeners.forEach(listener => listener(name));
+
     return this;
+  }
+
+  onDeepInject(callback: string => void) {
+    this.deepInjectListeners.push(callback);
   }
 
   subscribersToSagaAppending: Array<(*) => void> = [];

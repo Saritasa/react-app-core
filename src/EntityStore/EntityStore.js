@@ -23,7 +23,7 @@ const noop = (...rest) => null;
 // todo noop uses in one place only.
 // todo maybe we should replace this?
 
-const NO_STATE = Immutable.fromJS({});
+const NO_STATE: any = Immutable.fromJS({});
 
 /**
  * EntityStore Class.

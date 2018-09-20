@@ -4,6 +4,7 @@ import { Link as ReactRouterLink } from 'react-router-dom';
 
 import { InjectedPath } from './InjectedPath';
 import { getFullRoute } from './getFullRoute';
+import { sanitizeProps } from './sanitizeProps';
 
 type LinkProps = React.ElementProps<typeof ReactRouterLink>;
 type LinkState = { injectedRoute: ?InjectedPath, to: string };
@@ -64,11 +65,11 @@ export class Link extends React.PureComponent<LinkProps, LinkState> {
     const { to: stateTo } = this.state;
 
     if (propTo instanceof InjectedPath) {
-      return <ReactRouterLink {...rest} to={getFullRoute(stateTo, rest)} />;
+      return <ReactRouterLink {...sanitizeProps(stateTo, rest)} to={getFullRoute(stateTo, rest)} />;
     }
 
     if (typeof propTo === 'string') {
-      return <ReactRouterLink {...rest} to={getFullRoute(propTo, rest)} />;
+      return <ReactRouterLink {...sanitizeProps(propTo, rest)} to={getFullRoute(propTo, rest)} />;
     }
 
     return <ReactRouterLink {...rest} to={propTo} />;

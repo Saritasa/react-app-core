@@ -1,5 +1,5 @@
 // @flow
-import { Iterable } from 'immutable';
+import { isImmutable } from "immutable";
 
 /**
  * Creates object that transforms Immutable to JS on demand.
@@ -12,7 +12,7 @@ import { Iterable } from 'immutable';
 export function lazyTransformToJS(state: *) {
   let result = state;
 
-  if (process.env.NODE_ENV !== 'production' && Iterable.isIterable(state)) {
+  if (process.env.NODE_ENV !== "production" && isImmutable(state)) {
     result = {};
 
     state.forEach((part, key) =>
@@ -24,12 +24,12 @@ export function lazyTransformToJS(state: *) {
          * Or just value in other cases.
          */
         get() {
-          if (!Iterable.isIterable(part)) return part;
+          if (!isImmutable(part)) return part;
 
           return part.toJS();
         },
-        enumerable: true,
-      }),
+        enumerable: true
+      })
     );
   }
 

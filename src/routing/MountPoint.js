@@ -62,10 +62,10 @@ export const MountPoint = withRouter(
        * @returns {React.Node} React component.
        */
       const render = ({ match }) => {
-        const content = childRoutes.map(childRoute => (
+        const content = childRoutes.map((childRoute, i) => (
           <MountPoint
-            key={`${childRoute.path}:${Math.random()}`}
-            {...MountPointPlain.getRouteProps(match.url, childRoute)}
+            key={`${childRoute.path}:${i}`}
+            {...MountPointPlain.getRouteProps(match.path, childRoute)}
           />
         ));
 

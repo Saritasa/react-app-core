@@ -1,9 +1,9 @@
 // @flow
-import * as React from 'react';
-import { Route } from 'react-router-dom';
+import * as React from "react";
+import { Route, Switch } from "react-router-dom";
 
-import { RouteStore } from './RouteStore';
-import { MountPoint } from './MountPoint';
+import { RouteStore } from "./RouteStore";
+import { MountPoint } from "./MountPoint";
 
 type Props = {| routeStore: RouteStore, location?: any |};
 type State = { routeStore: ?RouteStore, routes: Array<*> };
@@ -43,7 +43,7 @@ export class Routes extends React.PureComponent<Props, State> {
   componentDidMount() {
     if (!this.state.routeStore) {
       throw new Error(
-        'componentDidMount called without #routeStore. This should never happened. Please change if you passed #routeStore property to RouteComponent.',
+        "componentDidMount called without #routeStore. This should never happened. Please change if you passed #routeStore property to RouteComponent."
       );
     }
     this.state.routeStore.subscribe(this.handleRouteUpdates);
@@ -64,12 +64,12 @@ export class Routes extends React.PureComponent<Props, State> {
    */
   static getRouteProps(
     parentRoute: string,
-    { childRoutes = [], path = '', ...route }: *,
+    { childRoutes = [], path = "", ...route }: *
   ) {
     return {
       ...route,
       childRoutes,
-      path: `${parentRoute}/${path}`.replace(/\/+/g, '/'),
+      path: `${parentRoute}/${path}`.replace(/\/+/g, "/")
     };
   }
 
@@ -77,11 +77,12 @@ export class Routes extends React.PureComponent<Props, State> {
    * Returns Router component.
    *
    * @param {string} path - Path.
+   * @param {boolean} isSwitch - if true - use switch, else will be rendered as regular route.
    * @param {number} index - Index.
    * @param {*} route - Rest routes.
    * @returns {React.Node} Router component.
    */
-  static renderRoute({ path, ...route }: *, index: number) {
+  static renderRoute({ path, isSwitch = false, ...route }: *, index: number) {
     /**
      * Returns Route component.
      *
@@ -91,6 +92,20 @@ export class Routes extends React.PureComponent<Props, State> {
     const render = ({ match }) => (
       <MountPoint match={match} {...route} path={path} />
     );
+
+    if (isSwitch) {
+      if (!route.childRoutes) {
+        throw new Error("Can't use Route.isSwitch without childRoutes");
+      }
+
+      return (
+        <Switch key={`${path}:${index}`} {...route}>
+          {route.childRoutes.map((route, index) =>
+            Routes.renderRoute(Routes.getRouteProps(path, route), index)
+          )}
+        </Switch>
+      );
+    }
 
     return (
       <Route key={`${path}:${index}`} {...route} path={path} render={render} />
@@ -106,7 +121,7 @@ export class Routes extends React.PureComponent<Props, State> {
     return (
       <div>
         {this.state.routes.map((route, index) =>
-          Routes.renderRoute(Routes.getRouteProps('/', route), index),
+          Routes.renderRoute(Routes.getRouteProps("/", route), index)
         )}
       </div>
     );

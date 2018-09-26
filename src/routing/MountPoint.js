@@ -82,27 +82,20 @@ export const MountPoint = withRouter(
           throw new Error("Can't use Route.isSwitch without childRoutes.");
         }
 
-        if (path) {
-          throw new Error("Can't use Route.isSwitch with path. Move path into parent or child route.")
-        }
-
-        const renderRoute = childRoute => ({ match }) => {
-          return (
-            <MountPoint
-              {...MountPointPlain.getRouteProps(match.path, childRoute)}
-            />
-          );
-        };
-
         return (
-          <Switch {...route}>
-            {childRoutes.map((route, index) => (
-              <MountPoint
-                key={index}
-                {...MountPointPlain.getRouteProps(path, route)}
-              />
-            ))}
-          </Switch>
+          <Route
+            path={path}
+            render={({ match }) => (
+              <Switch {...route}>
+                {childRoutes.map((route, index) => (
+                  <MountPoint
+                    key={index}
+                    {...MountPointPlain.getRouteProps(match.path, route)}
+                  />
+                ))}
+              </Switch>
+            )}
+          />
         );
       }
 

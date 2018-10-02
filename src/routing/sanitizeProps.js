@@ -9,7 +9,7 @@
 export function sanitizeProps(route: string, props: { [key: string]: any }) {
   const routeParts = route.split('/');
 
-  return (routeParts: any)
+  const withoutAppliedParams = (routeParts: any)
     .reduce((props, part) => {
       if (!part.startsWith(':')) {
         return props;
@@ -21,4 +21,10 @@ export function sanitizeProps(route: string, props: { [key: string]: any }) {
 
       return nextProps;
     }, props);
+
+  return removePropsEndsWithId(withoutAppliedParams);
+}
+
+function removePropsEndsWithId(props) {
+  return Object.keys(props).filter(key => !key.endsWith('Id')).reduce((accum, key) => ({ ...accum, [key]: props[key]}), {});
 }

@@ -4,8 +4,43 @@ import { Route } from 'react-router-dom';
 
 type RouteShape = {
   ...$Exact<React.ElementProps<typeof Route>>,
+  injectToken?: string,
   childRoutes?: Array<RouteShape>,
 };
+
+function getPathInRoutesByToken(routes, injectToken, previousPath = []) {
+  return routes.reduce((result, route) => {
+    if (result) return result;
+
+    if (route.injectToken === injectToken) {
+      return [...previousPath, route.path].filter(Boolean);
+    }
+
+    if (route.childRoutes) {
+      return getPathInRoutesByToken(route.childRoutes, injectToken, [...previousPath, route.path]);
+    }
+
+    return null;
+  }, null);
+}
+
+function injectRoutesByInjectToken(routes, routesToInject, injectToken) {
+  return routes.some((route) => {
+    if (route.injectToken === injectToken) {
+      route.childRoutes = route.childRoutes || [];
+
+      route.childRoutes.push(...routesToInject);
+
+      return true;
+    }
+
+    if (route.childRoutes) {
+      return injectRoutesByInjectToken(route.childRoutes, routesToInject, injectToken);
+    }
+
+    return false;
+  });
+}
 
 /**
  * RouteStore class.
@@ -13,6 +48,7 @@ type RouteShape = {
 export class RouteStore {
   parentPath: string = '';
   name: string = '';
+  injectToken: string = '';
   routes: Array<RouteShape> = [];
   subscribers: Array<(Array<RouteShape>) => void> = [];
   pathSubscribers: Array<(string) => void> = [];
@@ -40,14 +76,51 @@ export class RouteStore {
   /**
    * Inject store to children.
    *
-   * @param {Array} routes - ComposeStore instance.
+   * @param {Array} routes - Array of routes.
    * @returns {RouteStore} This instance for chains.
    */
   inject(routes: Array<RouteShape>): this {
     this.routes.push(...routes);
+
     this.callSubscribers();
 
     return this;
+  }
+
+  /**
+   * Inject store to children by inject token.
+   *
+   * @param {RouteStore} store - Store to inject.
+   * @param {string} [injectToken] - Token which describe where routes should be injected.
+   * @returns {RouteStore} This instance for chains.
+   */
+  injectByToken(store: RouteStore, injectToken: string): this {
+    const pathByToken = this.getPathByToken(injectToken);
+
+    const routesToInject = store.setParentPath(pathByToken).getRoutes();
+    let injected = injectRoutesByInjectToken(this.routes, routesToInject, injectToken);
+    if (!injected) {
+      throw new Error(`Did not found inject token "${injectToken}"`);
+    }
+    this.callSubscribers();
+
+    return this;
+  }
+
+  /**
+   * Gets path for injectToken.
+   *
+   * @param {string} [injectToken] - Token which describe where routes should be injected.
+   * @returns {RouteStore} This instance for chains.
+   */
+  getPathByToken(injectToken: string) {
+    const path = getPathInRoutesByToken(this.routes, injectToken);
+
+    if (!path) {
+      throw new Error(`Did not found inject token "${injectToken}"`);
+    }
+
+    return [this.parentPath, this.name, ...path].join('/').replace(/\/+/g, '/');
   }
 
   /**
@@ -57,10 +130,19 @@ export class RouteStore {
    * @returns {RouteStore} This instance for chains.
    */
   injectRouteStore(store: RouteStore): this {
-    this.inject(store.setParentPath(this.parentPath).getRoutes());
-    this.onParentPathChange(parentPath => {
-      store.setParentPath(parentPath);
-    });
+    const { injectToken } = store;
+
+    if (!injectToken) {
+      this.inject(store.setParentPath(this.parentPath).getRoutes());
+      this.onParentPathChange(parentPath => {
+        store.setParentPath(parentPath);
+      });
+    } else {
+      this.injectByToken(store, injectToken);
+      this.onParentPathChange(() => {
+        store.setParentPath(this.getPathByToken(injectToken));
+      });
+    }
 
     return this;
   }
@@ -92,6 +174,19 @@ export class RouteStore {
   }
 
   /**
+   * Sets inject token for route store.
+   *
+   * Inject token is used for nesting routes.
+   * @param {string} injectToken
+   * @returns {RouteStore}
+   */
+  setInjectToken(injectToken: string): this {
+    this.injectToken = injectToken;
+
+    return this;
+  }
+
+  /**
    * Returns array of routes.
    *
    * @returns {*[]} Array with object with path, childRoutes.
@@ -116,6 +211,6 @@ export class RouteStore {
    * Run all parent path subscribers.
    */
   callParentPathSubscribers() {
-    this.pathSubscribers.forEach(cb => cb(`${this.parentPath}/${this.name}`));
+    this.pathSubscribers.forEach(cb => cb(`${this.parentPath}/${this.name}`.replace(/\/+/g, '/')));
   }
 }

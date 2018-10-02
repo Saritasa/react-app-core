@@ -1,5 +1,7 @@
 # react-app-core
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/Saritasa/react-app-core.svg)](https://greenkeeper.io/)
+
 Package that implements base application's functional to prevent copy-pasting it between different projects.
 
 **Not stable currently**

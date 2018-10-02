@@ -21,11 +21,7 @@ export function getFullRoute(route: string, params: { [string]: any }) {
 
       if (!(paramName in params)) {
         throw new Error(
-          `Missed parameter with name "${paramName}" in params for route="${route}". Params are ${JSON.stringify(
-            params,
-            null,
-            2,
-          )}`,
+          `Missed parameter with name "${paramName}" in params for route="${route}". Params' keys are ${Object.keys(params).join(', ')}`,
         );
       }
 

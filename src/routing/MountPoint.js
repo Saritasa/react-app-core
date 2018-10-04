@@ -82,18 +82,40 @@ export const MountPoint = withRouter(
           throw new Error("Can't use Route.isSwitch without childRoutes.");
         }
 
+        if (typeof Component === "string" || Component === React.Fragment) {
+          return (
+            <Route
+              path={path}
+              render={({ match }) => (
+                <Component>
+                  <Switch {...route}>
+                    {childRoutes.map((route, index) => (
+                      <MountPoint
+                        key={index}
+                        {...MountPointPlain.getRouteProps(match.path, route)}
+                      />
+                    ))}
+                  </Switch>
+                </Component>
+              )}
+            />
+          );
+        }
+
         return (
           <Route
             path={path}
             render={({ match }) => (
-              <Switch {...route}>
-                {childRoutes.map((route, index) => (
-                  <MountPoint
-                    key={index}
-                    {...MountPointPlain.getRouteProps(match.path, route)}
-                  />
-                ))}
-              </Switch>
+              <Component match={match}>
+                <Switch {...route}>
+                  {childRoutes.map((route, index) => (
+                    <MountPoint
+                      key={index}
+                      {...MountPointPlain.getRouteProps(match.path, route)}
+                    />
+                  ))}
+                </Switch>
+              </Component>
             )}
           />
         );

@@ -65,11 +65,21 @@ export class Link extends React.PureComponent<LinkProps, LinkState> {
     const { to: stateTo } = this.state;
 
     if (propTo instanceof InjectedPath) {
-      return <ReactRouterLink {...sanitizeProps(stateTo, rest)} to={getFullRoute(stateTo, rest)} />;
+      return (
+        <ReactRouterLink
+          {...sanitizeProps(stateTo, rest)}
+          to={getFullRoute(stateTo, rest)}
+        />
+      );
     }
 
     if (typeof propTo === 'string') {
-      return <ReactRouterLink {...sanitizeProps(propTo, rest)} to={getFullRoute(propTo, rest)} />;
+      return (
+        <ReactRouterLink
+          {...sanitizeProps(propTo, rest)}
+          to={getFullRoute(propTo, rest)}
+        />
+      );
     }
 
     return <ReactRouterLink {...rest} to={propTo} />;

@@ -33,7 +33,7 @@ function injectRoutesByInjectToken(
 ) {
   return routes.some(route => {
     if (route.injectToken === injectToken) {
-      Object.assign(routeToInject);
+      Object.assign(route, routeToInject);
 
       return true;
     }

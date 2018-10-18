@@ -6,6 +6,7 @@ type RouteShape = {
   ...$Exact<React.ElementProps<typeof Route>>,
   injectToken?: string,
   childRoutes?: Array<RouteShape>,
+  isSwitch?: boolean,
 };
 
 function getPathInRoutesByToken(routes, injectToken, previousPath = []) {
@@ -14,28 +15,37 @@ function getPathInRoutesByToken(routes, injectToken, previousPath = []) {
 
     if (route.injectToken === injectToken) {
       return [...previousPath, route.path].filter(Boolean);
-    }
-
-    if (route.childRoutes) {
-      return getPathInRoutesByToken(route.childRoutes, injectToken, [...previousPath, route.path]);
+    } else if (route.childRoutes) {
+      return getPathInRoutesByToken(route.childRoutes, injectToken, [
+        ...previousPath,
+        route.path,
+      ]);
     }
 
     return null;
   }, null);
 }
 
-function injectRoutesByInjectToken(routes, routesToInject, injectToken) {
-  return routes.some((route) => {
+function injectRoutesByInjectToken(
+  routes: Array<RouteShape>,
+  routeToInject: RouteShape,
+  injectToken,
+) {
+  return routes.some(route => {
     if (route.injectToken === injectToken) {
-      route.childRoutes = route.childRoutes || [];
+      delete route.injectToken;
 
-      route.childRoutes.push(...routesToInject);
+      Object.assign(routeToInject);
 
       return true;
     }
 
     if (route.childRoutes) {
-      return injectRoutesByInjectToken(route.childRoutes, routesToInject, injectToken);
+      return injectRoutesByInjectToken(
+        route.childRoutes,
+        routeToInject,
+        injectToken,
+      );
     }
 
     return false;
@@ -97,8 +107,13 @@ export class RouteStore {
   injectByToken(store: RouteStore, injectToken: string): this {
     const pathByToken = this.getPathByToken(injectToken);
 
-    const routesToInject = store.setParentPath(pathByToken).getRoutes();
-    let injected = injectRoutesByInjectToken(this.routes, routesToInject, injectToken);
+    const rootRouteToInject = store.setParentPath(pathByToken).getRootRoute();
+    const injected = injectRoutesByInjectToken(
+      this.routes,
+      rootRouteToInject,
+      injectToken,
+    );
+
     if (!injected) {
       throw new Error(`Did not found inject token "${injectToken}"`);
     }
@@ -177,6 +192,7 @@ export class RouteStore {
    * Sets inject token for route store.
    *
    * Inject token is used for nesting routes.
+   *
    * @param {string} injectToken
    * @returns {RouteStore}
    */
@@ -201,6 +217,18 @@ export class RouteStore {
   }
 
   /**
+   * Returns array of routes.
+   *
+   * @returns {RouteShape} Root route with child routes.
+   */
+  getRootRoute(): RouteShape {
+    return {
+      path: this.name,
+      childRoutes: [...this.routes],
+    };
+  }
+
+  /**
    * Run all subscribers.
    */
   callSubscribers() {
@@ -211,6 +239,8 @@ export class RouteStore {
    * Run all parent path subscribers.
    */
   callParentPathSubscribers() {
-    this.pathSubscribers.forEach(cb => cb(`${this.parentPath}/${this.name}`.replace(/\/+/g, '/')));
+    this.pathSubscribers.forEach(cb =>
+      cb(`${this.parentPath}/${this.name}`.replace(/\/+/g, '/')),
+    );
   }
 }

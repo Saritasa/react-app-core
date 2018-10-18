@@ -152,7 +152,10 @@ export class EntityStore {
     onDeepInject = noop,
     subscribeToSagaAppending = noop,
   }: *) {
-    if (Object.prototype.hasOwnProperty.call(this.reducers, name) && process.env.NODE_ENV !== 'test') {
+    if (
+      Object.prototype.hasOwnProperty.call(this.reducers, name) &&
+      process.env.NODE_ENV !== 'test'
+    ) {
       throw new Error(`Specified name is not unique. Name is "${name}"`);
     }
 
@@ -176,7 +179,7 @@ export class EntityStore {
 
     this.deepInjectListeners.forEach(listener => listener(name));
 
-    onDeepInject((name) => {
+    onDeepInject(name => {
       this.deepInjectListeners.forEach(listener => listener(name));
     });
 

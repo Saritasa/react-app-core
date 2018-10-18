@@ -1,6 +1,6 @@
 // @flow
-import * as React from "react";
-import { Route, Switch, withRouter } from "react-router-dom";
+import * as React from 'react';
+import { Route, Switch, withRouter } from 'react-router-dom';
 
 /**
  * MountPointPlain class wrapped withRouter.
@@ -21,12 +21,12 @@ export const MountPoint = withRouter(
      */
     static getRouteProps(
       parentRoute: string,
-      { childRoutes = [], path = "", ...route }: *
+      { childRoutes = [], path = '', ...route }: *,
     ) {
       return {
         ...route,
         childRoutes,
-        path: `${parentRoute}/${path}`.replace(/\/+/g, "/")
+        path: `${parentRoute}/${path}`.replace(/\/+/g, '/'),
       };
     }
 
@@ -46,13 +46,13 @@ export const MountPoint = withRouter(
 
       if (route.render) {
         throw new Error(
-          "#render is not allowed property for route configuration."
+          '#render is not allowed property for route configuration.',
         );
       }
 
       if (route.children) {
         throw new Error(
-          "#children is not allowed property for route configuration."
+          '#children is not allowed property for route configuration.',
         );
       }
 
@@ -70,7 +70,7 @@ export const MountPoint = withRouter(
           />
         ));
 
-        if (typeof Component === "string" || Component === React.Fragment) {
+        if (typeof Component === 'string' || Component === React.Fragment) {
           return <Component>{content}</Component>;
         }
 
@@ -82,7 +82,7 @@ export const MountPoint = withRouter(
           throw new Error("Can't use Route.isSwitch without childRoutes.");
         }
 
-        if (typeof Component === "string" || Component === React.Fragment) {
+        if (typeof Component === 'string' || Component === React.Fragment) {
           return (
             <Route
               path={path}
@@ -123,5 +123,5 @@ export const MountPoint = withRouter(
 
       return <Route {...route} path={path} render={render} />;
     }
-  }
+  },
 );

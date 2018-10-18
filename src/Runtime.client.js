@@ -47,12 +47,11 @@ export class RuntimeClient {
 
   subscribeToStoreUpdates() {
     this.entityStore.onDeepInject(name => {
-        this.store.dispatch({
-          type: '@@react-app-core/DEEP_INJECT_ENTITY',
-          payload: {name},
-        })
-      },
-    );
+      this.store.dispatch({
+        type: '@@react-app-core/DEEP_INJECT_ENTITY',
+        payload: { name },
+      });
+    });
     this.appStore.onDeepInject(name =>
       this.store.dispatch({
         type: '@@react-app-core/DEEP_INJECT_ENTITY',

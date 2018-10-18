@@ -14,7 +14,7 @@ function getPathInRoutesByToken(routes, injectToken, previousPath = []) {
     if (result) return result;
 
     if (route.injectToken === injectToken) {
-      return [...previousPath, route.path].filter(Boolean);
+      return previousPath.filter(Boolean);
     } else if (route.childRoutes) {
       return getPathInRoutesByToken(route.childRoutes, injectToken, [
         ...previousPath,

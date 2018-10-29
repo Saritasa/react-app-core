@@ -1,17 +1,22 @@
 // @flow
-import * as React from 'react';
-import { Redirect as ReactRouterRedirect } from 'react-router-dom';
+import * as React from "react";
+import { Redirect as ReactRouterRedirect, withRouter } from "react-router-dom";
 
-import { InjectedPath } from './InjectedPath';
-import { getFullRoute } from './getFullRoute';
-import { sanitizeProps } from './sanitizeProps';
+import { InjectedPath } from "./InjectedPath";
+import { getFullRoute } from "./getFullRoute";
+import { sanitizeProps } from "./sanitizeProps";
 
-type RedirectProps = React.ElementProps<typeof ReactRouterRedirect>;
+type RedirectProps = {
+  ...$Exact<React.ElementProps<typeof ReactRouterRedirect>>,
+  ...$Exact<
+    React.ElementProps<$Call<typeof withRouter, React.ComponentType<*>>>
+    >
+};
 
 /**
  * Redirect class.
  */
-export class Redirect extends React.PureComponent<RedirectProps> {
+class RedirectComponent extends React.PureComponent<RedirectProps> {
   /**
    * @param path
    * @param params
@@ -19,7 +24,31 @@ export class Redirect extends React.PureComponent<RedirectProps> {
    */
   static of(path: string, params: { [key: string]: mixed } = {}) {
     return (props: { [key: string]: mixed }) => (
-      <Redirect {...params} {...props} to={path} />
+      <RedirectComponent {...params} {...props} to={path} />
+    );
+  }
+
+  /**
+   * Skips redirect in case of target url is the same as current.
+   *
+   * @param {string} to Target url.
+   * @returns {React.Node|null}
+   */
+  redirectOrSkip(to) {
+    const { to: _, match, location, ...rest } = this.props;
+
+    if (typeof window !== 'undefined') {
+      if (window.location.pathname === to) {
+        console.warn(`Can't redirect from ${window.location.pathname} to ${to}. Do nothing.`);
+        return null;
+      }
+    }
+
+    return (
+      <ReactRouterRedirect
+        {...sanitizeProps(to, rest)}
+        to={to}
+      />
     );
   }
 
@@ -29,26 +58,14 @@ export class Redirect extends React.PureComponent<RedirectProps> {
    * @returns {?string} HTML markup or null.
    */
   render() {
-    const { to, ...rest } = this.props;
+    const { to, match, location, ...rest } = this.props;
 
-    if (to instanceof InjectedPath) {
-      return (
-        <ReactRouterRedirect
-          {...sanitizeProps(to.getPath(), rest)}
-          to={getFullRoute(to, rest)}
-        />
-      );
-    }
-
-    if (typeof to === 'string') {
-      return (
-        <ReactRouterRedirect
-          {...sanitizeProps(to, rest)}
-          to={getFullRoute(to, rest)}
-        />
-      );
+    if (to instanceof InjectedPath || typeof to ==='string') {
+      return this.redirectOrSkip(getFullRoute(to, rest))
     }
 
     return <ReactRouterRedirect {...rest} to={to} />;
   }
 }
+
+export const Redirect = withRouter(RedirectComponent);

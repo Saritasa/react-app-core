@@ -1,14 +1,14 @@
 // @flow
-import * as React from "react";
-import { Redirect as ReactRouterRedirect, withRouter } from "react-router-dom";
+import * as React from 'react';
+import { Redirect as ReactRouterRedirect, withRouter } from 'react-router-dom';
 
-import {RedirectComponent} from "./RedirectComponent";
+import { RedirectComponent } from './RedirectComponent';
 
 type RedirectProps = {
   ...$Exact<React.ElementProps<typeof ReactRouterRedirect>>,
   ...$Exact<
-    React.ElementProps<$Call<typeof withRouter, React.ComponentType<*>>>
-    >
+    React.ElementProps<$Call<typeof withRouter, React.ComponentType<*>>>,
+  >,
 };
 
 /**
@@ -32,6 +32,6 @@ export class Redirect extends React.PureComponent<RedirectProps> {
    * @returns {?string} HTML markup or null.
    */
   render() {
-    return <RedirectComponent {...this.props} />
+    return <RedirectComponent {...this.props} />;
   }
 }

@@ -6,6 +6,6 @@ import * as Immutable from 'immutable';
  *
  * @returns {Immutable.Map} Initial state.
  */
-export function getInitialState() {
+export function getInitialState(): Immutable.Map<string, any> {
   return Immutable.Map();
 }

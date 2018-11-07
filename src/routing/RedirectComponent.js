@@ -1,23 +1,22 @@
 // @flow
-import * as React from "react";
-import { Redirect as ReactRouterRedirect, withRouter } from "react-router-dom";
+import * as React from 'react';
+import { Redirect as ReactRouterRedirect, withRouter } from 'react-router-dom';
 
-import { InjectedPath } from "./InjectedPath";
-import { getFullRoute } from "./getFullRoute";
-import { sanitizeProps } from "./sanitizeProps";
+import { InjectedPath } from './InjectedPath';
+import { getFullRoute } from './getFullRoute';
+import { sanitizeProps } from './sanitizeProps';
 
 type RedirectProps = {
   ...$Exact<React.ElementProps<typeof ReactRouterRedirect>>,
   ...$Exact<
-    React.ElementProps<$Call<typeof withRouter, React.ComponentType<*>>>
-    >
+    React.ElementProps<$Call<typeof withRouter, React.ComponentType<*>>>,
+  >,
 };
 
 /**
  * Redirect class.
  */
 class RedirectComponentPure extends React.PureComponent<RedirectProps> {
-
   /**
    * Skips redirect in case of target url is the same as current.
    *
@@ -29,17 +28,17 @@ class RedirectComponentPure extends React.PureComponent<RedirectProps> {
 
     if (typeof window !== 'undefined') {
       if (window.location.pathname === to) {
-        console.warn(`Can't redirect from ${window.location.pathname} to ${to}. Do nothing.`);
+        console.warn(
+          `Can't redirect from ${
+            window.location.pathname
+          } to ${to}. Do nothing.`,
+        );
+
         return null;
       }
     }
 
-    return (
-      <ReactRouterRedirect
-        {...sanitizeProps(to, rest)}
-        to={to}
-      />
-    );
+    return <ReactRouterRedirect {...sanitizeProps(to, rest)} to={to} />;
   }
 
   /**
@@ -50,8 +49,8 @@ class RedirectComponentPure extends React.PureComponent<RedirectProps> {
   render() {
     const { to, match, location, ...rest } = this.props;
 
-    if (to instanceof InjectedPath || typeof to ==='string') {
-      return this.redirectOrSkip(getFullRoute(to, rest))
+    if (to instanceof InjectedPath || typeof to === 'string') {
+      return this.redirectOrSkip(getFullRoute(to, rest));
     }
 
     return <ReactRouterRedirect {...rest} to={to} />;

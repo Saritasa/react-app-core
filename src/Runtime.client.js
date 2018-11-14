@@ -4,14 +4,19 @@ import { combineReducers } from 'redux-immutable';
 
 import { EntityStore } from './EntityStore';
 
-import { configureStore, getInitialState, appendSaga } from './store';
+import {
+  configureStore,
+  getInitialState,
+  appendSaga,
+  CLEAR_STORE,
+} from './store';
 import { RouteStore } from './routing';
 
 const entityStore = new EntityStore()
   .setBaseSelectorPath(['entities'])
   .setName('entities');
 const appStore = new EntityStore()
-  .setBaseSelectorPath(['entities'])
+  .setBaseSelectorPath(['appInfo'])
   .setName('appInfo');
 
 const reducer = combineReducers({
@@ -60,7 +65,15 @@ export class RuntimeClient {
     );
   }
 
-  store = configureStore(getInitialState(), { reducer, sagas: initialSagas });
+  store = configureStore(getInitialState(), {
+    reducer: (state, action) => {
+      if (action && action.type === CLEAR_STORE)
+        return reducer(undefined, action);
+
+      return reducer(state, action);
+    },
+    sagas: initialSagas,
+  });
   Router = Router;
   routeStore = new RouteStore();
   entityStore = entityStore;

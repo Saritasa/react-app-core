@@ -91,7 +91,7 @@ export const MountPoint = withRouter(
                   <Switch {...route}>
                     {childRoutes.map((route, index) => (
                       <MountPoint
-                        key={index}
+                        key={`${route.path}:${index}-${match.path}`}
                         {...MountPointPlain.getRouteProps(match.path, route)}
                       />
                     ))}
@@ -110,7 +110,7 @@ export const MountPoint = withRouter(
                 <Switch {...route}>
                   {childRoutes.map((route, index) => (
                     <MountPoint
-                      key={index}
+                      key={`${route.path}:${index}-${match.path}`}
                       {...MountPointPlain.getRouteProps(match.path, route)}
                     />
                   ))}

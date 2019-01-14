@@ -1,6 +1,6 @@
 // @flow
 import * as React from 'react';
-import { Link as ReactRouterLink } from 'react-router-dom';
+import { NavLink as ReactRouterLink } from 'react-router-dom';
 
 import { InjectedPath } from './InjectedPath';
 import { getFullRoute } from './getFullRoute';

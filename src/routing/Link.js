@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import type { Match, Location } from 'react-router-dom';
 import { NavLink as ReactRouterLink } from 'react-router-dom';
 
 import { InjectedPath } from './InjectedPath';
@@ -13,6 +14,10 @@ type LinkState = { injectedRoute: ?InjectedPath, to: string };
  * Link class.
  */
 export class Link extends React.PureComponent<LinkProps, LinkState> {
+  static defaultProps = {
+    isActive: (path: *, match: Match, location: Location) => !!(match || path === location.pathname),
+  };
+
   state = { to: '', injectedRoute: null };
 
   /**

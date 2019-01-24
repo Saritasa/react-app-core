@@ -6,6 +6,7 @@ export {
   getFullRoute,
   Link,
   Redirect,
+  RedirectWithReolad,
   createLink,
   RouteStore,
   InjectedPath,

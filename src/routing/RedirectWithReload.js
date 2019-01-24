@@ -1,12 +1,12 @@
 // @flow
 import * as React from 'react';
 
-type RedirectWithReoladProps = { to: string };
+type RedirectWithReloadProps = { to: string };
 
 /**
  * Component performs redirect with page reloading.
  */
-export class RedirectWithReolad extends React.PureComponent<RedirectWithReoladProps> {
+export class RedirectWithReload extends React.PureComponent<RedirectWithReloadProps> {
   /**
    * Performs the redirect action.
    */

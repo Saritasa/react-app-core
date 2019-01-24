@@ -5,7 +5,7 @@ import { getFullRoute } from './getFullRoute';
 import { createLink } from './createLink';
 import { Link } from './Link';
 import { Redirect } from './Redirect';
-import { RedirectWithReolad } from './RedirectWithReolad';
+import { RedirectWithReload } from './RedirectWithReload';
 import { InjectedPath } from './InjectedPath';
 
 export {
@@ -13,7 +13,7 @@ export {
   RouteStore,
   Link,
   Redirect,
-  RedirectWithReolad,
+  RedirectWithReload,
   getFullRoute,
   createLink,
   InjectedPath,

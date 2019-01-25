@@ -56,27 +56,27 @@ export class Routes extends React.PureComponent<Props, State> {
   /**
    * Returns object with path.
    *
-   * @param {string} parentRoute - Parent route.
+   * @param {Array<string>} parentRoutes - Parent route.
    * @param {Array} childRoutes - Child routes.
    * @param {string} path - Path.
    * @param {*} route - Rest props.
    * @returns {{childRoutes: Array, path: string}} Route props.
    */
   static getRouteProps(
-    parentRoute: string,
+    parentRoutes: Array<string>,
     { childRoutes = [], path = '', ...route }: *,
   ) {
     return {
       ...route,
       childRoutes,
-      path: `${parentRoute}/${path}`.replace(/\/+/g, '/'),
+      path: parentRoutes.map(parentRoute => `${parentRoute}/${path}`.replace(/\/+/g, '/')),
     };
   }
 
   /**
    * Returns Router component.
    *
-   * @param {string} path - Path.
+   * @param {Array<string>} path - Path.
    * @param {boolean} isSwitch - If true - use switch, else will be rendered as regular route.
    * @param {number} index - Index.
    * @param {*} route - Rest routes.
@@ -121,7 +121,7 @@ export class Routes extends React.PureComponent<Props, State> {
     return (
       <div>
         {this.state.routes.map((route, index) =>
-          Routes.renderRoute(Routes.getRouteProps('/', route), index),
+          Routes.renderRoute(Routes.getRouteProps(['/'], route), index),
         )}
       </div>
     );

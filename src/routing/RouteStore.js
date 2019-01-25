@@ -4,6 +4,7 @@ import { Route } from 'react-router-dom';
 
 type RouteShape = {
   ...$Exact<React.ElementProps<typeof Route>>,
+  path?: string | Array<string>,
   injectToken?: string,
   childRoutes?: Array<RouteShape>,
   isSwitch?: boolean,

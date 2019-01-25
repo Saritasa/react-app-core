@@ -69,7 +69,15 @@ export class Routes extends React.PureComponent<Props, State> {
     return {
       ...route,
       childRoutes,
-      path: parentRoutes.map(parentRoute => `${parentRoute}/${path}`.replace(/\/+/g, '/')),
+      path: [].concat(
+        ...parentRoutes.map(parentRoute =>
+          Array.isArray(path)
+            ? path.map(singlePath =>
+                `${parentRoute}/${singlePath}`.replace(/\/+/g, '/'),
+              )
+            : `${parentRoute}/${path}`.replace(/\/+/g, '/'),
+        ),
+      ),
     };
   }
 

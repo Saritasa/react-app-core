@@ -1,6 +1,6 @@
 {
   "name": "react-app-core",
-  "version": "2.11.0",
+  "version": "2.11.1",
   "description": "Core part of react application to prevent copy-pasting",
   "repository": {
     "type": "git",

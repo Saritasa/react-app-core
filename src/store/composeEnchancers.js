@@ -11,6 +11,7 @@ function getComposeEnhancers() {
   if (
     process.env.REACT_APP_TARGET !== 'client' ||
     process.env.NODE_ENV === 'production' ||
+    typeof window === 'undefined' ||
     !window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
   ) {
     return compose;

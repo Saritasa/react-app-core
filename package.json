@@ -1,6 +1,6 @@
 {
   "name": "react-app-core",
-  "version": "2.11.1",
+  "version": "2.11.1-webapp",
   "description": "Core part of react application to prevent copy-pasting",
   "repository": {
     "type": "git",
@@ -45,18 +45,19 @@
     "rimraf": "^2.6.2"
   },
   "peerDependencies": {
-    "redux-immutable": "^4.0.0",
-    "react-router-dom": "^4.2.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "redux": "^4.0.0",
     "redux-logger": "^3.0.6",
     "redux-saga": "^0.16.0",
-    "immutable": "^3.8.2 || ^4.0.0 || ^4.0.0-rc.9",
     "react-redux": "^5.0.7"
   },
   "files": [
     "dist"
   ],
-  "dependencies": {}
+  "dependencies": {
+    "immutable": "^4.0.0",
+    "react-router-dom": "^4.3.1",
+    "redux-immutable": "^4.0.0"
+  }
 }

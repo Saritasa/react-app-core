@@ -116,3 +116,5 @@ typings/
 .next
 
 .idea
+.nvmrc
+dist/
